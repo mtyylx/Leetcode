@@ -1,48 +1,41 @@
+
 public class Queue {
-    //For Stack,
-    //Peek  is to get the last element
-    //Pop   is to throw the last element
-    //Push  is to add the last element
-    
-    //But for Queue,
-    //Peek  is to get the tail element
-    //Pop   is to throw the tail element
-    //Push  is to add the head element
-    
-    //Use two stack to push and pop like a queue.
-    //实际上数据是分开存储在output和input里面的
-    //这个要说挺不好想的，记下来最好。
-    
-    Stack input = new Stack();
-    Stack output = new Stack();
-    
-    // Push element x to the back of queue.
-    public void Push(int x) {
-        input.Push(x);
+    Stack<int> inStack = new Stack<int>();
+    Stack<int> outStack = new Stack<int>();
+    int count = 0;
+
+    public void Push(int val)
+    {
+        inStack.Push(val);
+        count++;
     }
-    
-    // Removes the element from front of queue.
-    public void Pop() {
-        Peek();
-        output.Pop();
+
+    //Use outStack to dequeue element.
+    //When outStack == empty, need to first copy everything from inStack to outStack, then pop from outStack.
+    //When outStack != empty, just pop from outStack until outStack is empty.
+    public int Pop()
+    {
+        count--;
+        if (outStack.Count == 0) in2out();
+        return outStack.Pop();
     }
-    
-    // Get the front element.
-    public int Peek() {
-        //First time user: Need to save element in reverse order to output stack
-        if(output.Count == 0){
-            while(input.Count != 0){
-                output.Push(input.Pop());
-            }
-        }
-        return (int)output.Peek();
+
+    //The same as Dequeue, only difference is it does not delete the element.
+    public int Peek()
+    {
+        if (outStack.Count == 0) in2out();
+        return outStack.Peek();
     }
-    
-    // Return whether the queue is empty.
-    public bool Empty() {
-        if(input.Count == 0 && output.Count == 0)
-            return true;
-        else 
-            return false;
+
+    public bool Empty()
+    {
+        return count == 0;
+    }
+
+    //Helper method, pour everything from inStack to outStack.
+    private void in2out()
+    {
+        while(inStack.Count != 0) outStack.Push(inStack.Pop());
     }
 }
+
